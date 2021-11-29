@@ -32,9 +32,15 @@ jobs:
           x86_64-unknown-linux-musl
         ]
     steps:
-    - name: Install dependencies
-      run: sudo apt-get install -qq gcc-arm-linux-gnueabihf
     - uses: actions/checkout@v2
+    - name: Install and configure cross-compile tools
+      run: |
+        sudo apt-get install -qq gcc-arm-linux-gnueabihf
+        cat >>~/.cargo/config <<EOF
+        [target.armv7-unknown-linux-gnueabihf]
+        linker = "arm-linux-gnueabihf-gcc"
+        EOF
+        ...
     - name: Install rust target
       run: rustup target add ${{ matrix.target }}
     - name: Run build
