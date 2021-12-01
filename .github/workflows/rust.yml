@@ -38,10 +38,10 @@ jobs:
             OS: ubuntu-latest
           - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1
             OS: ubuntu-latest
-#          - TARGET: x86_64-apple-darwin
-#            OS: ubuntu-latest
-#          - TARGET: x86_64-pc-windows-gnu
-#            OS: ubuntu-latest
+          - TARGET: x86_64-apple-darwin
+            OS: macos-latest
+          - TARGET: x86_64-pc-windows-gnu
+            OS: windows-latest
     needs: test
     runs-on: ${{ matrix.OS }}
     env:
@@ -52,8 +52,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install and configure dependencies
         run: |
-          sudo apt-get install -qq gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
-          
+          if [[ $OS =~ ^ubuntu.*$ ]]; then
+            sudo apt-get install -qq gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
+          fi
+                   
           cat >>~/.cargo/config <<EOF
           [target.aarch64-unknown-linux-gnu]
           linker = "aarch64-linux-gnu-gcc"
@@ -77,8 +79,13 @@ jobs:
       - name: Compress
         run: |
           mkdir -p ./artifacts
-          mv ./target/$TARGET/release/$NAME ./$NAME
-          tar -czf ./artifacts/$NAME-$TARGET-${{github.ref_name}}.tar.gz $NAME
+          if [[ $OS =~ ^windows.*$ ]]; then
+              EXEC=$NAME.exe
+          else
+              EXEC=$NAME
+          fi
+          mv ./target/$TARGET/release/$EXEC ./$EXEC
+          tar -czf ./artifacts/$NAME-$TARGET-${{github.ref_name}}.tar.gz $EXEC
       - name: Archive artifact
         uses: actions/upload-artifact@v2
         with:
