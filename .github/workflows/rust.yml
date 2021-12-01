@@ -45,7 +45,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install and configure dependencies
       run: |
-        sudo apt-get install -qq gcc-arm-linux-gnueabihf
+        # sudo apt-get install -qq gcc-arm-linux-gnueabihf
         
         cat >>~/.cargo/config <<EOF
         [target.armv7-unknown-linux-gnueabihf]
