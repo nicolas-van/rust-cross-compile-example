@@ -95,4 +95,4 @@ jobs:
         with:
           name: result
       - name: List
-        run: find ./artifacts
+        run: find .
