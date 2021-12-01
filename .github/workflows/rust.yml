@@ -21,7 +21,7 @@ jobs:
         with:
           path: |
             ~/.cargo/registry
-            ./target
+            target
           key: test-cargo-registry
       - uses: actions/checkout@v2
       - name: Run tests
@@ -65,7 +65,7 @@ jobs:
         with:
           path: |
             ~/.cargo/registry
-            ./target
+            target
           key: build-cargo-registry-${{matrix.TARGET}}
       - uses: actions/checkout@v2
       - name: Install and configure dependencies
@@ -94,7 +94,7 @@ jobs:
       - name: Install rust target
         run: rustup target add $TARGET
       - name: List
-        run: find ./target
+        run: find ./
       - name: Run build
         run: cargo build --release --verbose --target $TARGET
       - name: List
