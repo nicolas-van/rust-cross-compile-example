@@ -22,13 +22,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-         - TARGET: aarch64-unknown-linux-gnu
-           OS: ubuntu-latest
-         - TARGET: x86_64-apple-darwin
-           OS: ubuntu-latest
-         - TARGET: x86_64-pc-windows-gnu
-           OS: ubuntu-latest
          - TARGET: x86_64-unknown-linux-gnu
+           OS: ubuntu-latest
+         - TARGET: x86_64-unknown-linux-musl
+           OS: ubuntu-latest
+         - TARGET: aarch64-unknown-linux-gnu
            OS: ubuntu-latest
          - TARGET: aarch64-unknown-linux-musl
            OS: ubuntu-latest
@@ -36,7 +34,9 @@ jobs:
            OS: ubuntu-latest
          - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4
            OS: ubuntu-latest
-         - TARGET: x86_64-unknown-linux-musl
+         - TARGET: x86_64-apple-darwin
+           OS: ubuntu-latest
+         - TARGET: x86_64-pc-windows-gnu
            OS: ubuntu-latest
     runs-on: ${{ matrix.OS }}
     steps:
@@ -47,6 +47,8 @@ jobs:
         
         cat >>~/.cargo/config <<EOF
         [target.aarch64-unknown-linux-gnu]
+        linker = "aarch64-linux-gnu-gcc"
+        [target.aarch64-unknown-linux-musl]
         linker = "aarch64-linux-gnu-gcc"
         [target.armv7-unknown-linux-gnueabihf]
         linker = "arm-linux-gnueabihf-gcc"
