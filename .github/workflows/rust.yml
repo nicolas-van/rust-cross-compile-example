@@ -45,6 +45,8 @@ jobs:
     runs-on: ${{ matrix.OS }}
     env:
       NAME: rust-cross-compile-example
+      TARGET: ${{ matrix.TARGET }}
+      OS: ${{ matrix.OS }}
     steps:
     - uses: actions/checkout@v2
     - name: Install and configure dependencies
