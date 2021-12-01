@@ -34,17 +34,17 @@ jobs:
             OS: ubuntu-latest
           - TARGET: aarch64-unknown-linux-musl # tested on aws t4g.nano in alpine container
             OS: ubuntu-latest
-          - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4
+          - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4, not tested
             OS: ubuntu-latest
-          - TARGET: armv7-unknown-linux-musleabihf # raspberry pi 2-3-4
+          - TARGET: armv7-unknown-linux-musleabihf # raspberry pi 2-3-4, not tested
             OS: ubuntu-latest
-          - TARGET: arm-unknown-linux-gnueabihf # raspberry pi 0-1
+          - TARGET: arm-unknown-linux-gnueabihf # raspberry pi 0-1, not tested
             OS: ubuntu-latest
-          - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1
+          - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1, not tested
             OS: ubuntu-latest
           - TARGET: x86_64-apple-darwin # tested on a mac, is not properly signed so there are warning
             OS: macos-latest
-          - TARGET: x86_64-pc-windows-gnu
+          - TARGET: x86_64-pc-windows-gnu # tested on a windows machine
             OS: windows-latest
     needs: test
     runs-on: ${{ matrix.OS }}
