@@ -77,7 +77,8 @@ jobs:
       - name: Compress
         run: |
           mkdir -p ./artifacts
-          tar -czf ./artifacts/$NAME-$TARGET-${{github.ref_name}}.tar.gz ./target/$TARGET/release/$NAME
+          mv ./target/$TARGET/release/$NAME ./$NAME
+          tar -czf ./artifacts/$NAME-$TARGET-${{github.ref_name}}.tar.gz $NAME
       - name: Archive artifact
         uses: actions/upload-artifact@v2
         with:
