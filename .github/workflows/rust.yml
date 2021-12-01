@@ -30,9 +30,13 @@ jobs:
            OS: ubuntu-latest
          - TARGET: aarch64-unknown-linux-musl
            OS: ubuntu-latest
+         - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4
+           OS: ubuntu-latest
+         - TARGET: armv7-unknown-linux-musleabihf # raspberry pi 2-3-4
+           OS: ubuntu-latest
          - TARGET: arm-unknown-linux-gnueabihf # raspberry pi 0-1
            OS: ubuntu-latest
-         - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4
+         - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1
            OS: ubuntu-latest
          - TARGET: x86_64-apple-darwin
            OS: ubuntu-latest
@@ -52,7 +56,11 @@ jobs:
         linker = "aarch64-linux-gnu-gcc"
         [target.armv7-unknown-linux-gnueabihf]
         linker = "arm-linux-gnueabihf-gcc"
+        [target.armv7-unknown-linux-gnueabihf]
+        linker = "arm-linux-gnueabihf-gcc"
         [target.arm-unknown-linux-gnueabihf]
+        linker = "arm-linux-gnueabihf-gcc"
+        [target.arm-unknown-linux-musleabihf]
         linker = "arm-linux-gnueabihf-gcc"
         EOF
     - name: Install rust target
