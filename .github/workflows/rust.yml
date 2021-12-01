@@ -3,8 +3,6 @@ name: Rust
 on:
   push:
   pull_request:
-  release:
-    types: [created]
 
 env:
   CARGO_TERM_COLOR: always
@@ -19,6 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cargo cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ./target
+          key: test-cargo-registry
+      - name: List
+        run: find ./
       - name: Run tests
         run: cargo test --verbose
 
@@ -56,6 +63,15 @@ jobs:
       OS: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v2
+      - name: Cargo cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ./target
+          key: build-cargo-registry-${{matrix.TARGET}}
+      - name: List
+        run: find ./
       - name: Install and configure dependencies
         run: |
           # dependencies are only needed on ubuntu as that's the only place where
@@ -83,7 +99,7 @@ jobs:
         run: rustup target add $TARGET
       - name: Run build
         run: cargo build --release --verbose --target $TARGET
-      - name: List
+      - name: List target
         run: find ./target
       - name: Compress
         run: |
