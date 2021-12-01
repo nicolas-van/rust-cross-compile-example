@@ -18,19 +18,27 @@ jobs:
       run: cargo test --verbose
 
   build:
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        target: [
-          aarch64-unknown-linux-gnu,
-          x86_64-apple-darwin,
-          x86_64-pc-windows-gnu,
-          x86_64-unknown-linux-gnu,
-          aarch64-unknown-linux-musl,
-          armv7-unknown-linux-gnueabihf,
-          x86_64-unknown-linux-musl
-        ]
+        include:
+         - TARGET: aarch64-unknown-linux-gnu
+           OS: ubuntu-latest
+         - TARGET: aarch64-unknown-linux-gnu
+           OS: ubuntu-latest
+         - TARGET: x86_64-apple-darwin
+           OS: ubuntu-latest
+         - TARGET: x86_64-pc-windows-gnu
+           OS: ubuntu-latest
+         - TARGET: x86_64-unknown-linux-gnu
+           OS: ubuntu-latest
+         - TARGET: aarch64-unknown-linux-musl
+           OS: ubuntu-latest
+         - TARGET: armv7-unknown-linux-gnueabihf
+           OS: ubuntu-latest
+         - TARGET: x86_64-unknown-linux-musl
+           OS: ubuntu-latest
+    runs-on: ${{ matrix.OS }}
     steps:
     - uses: actions/checkout@v2
     - name: Install and configure cross-compile tools
@@ -42,6 +50,6 @@ jobs:
         linker = "arm-linux-gnueabihf-gcc"
         EOF
     - name: Install rust target
-      run: rustup target add ${{ matrix.target }}
+      run: rustup target add ${{ matrix.TARGET }}
     - name: Run build
-      run: cargo build --release --verbose --target ${{ matrix.target }}
+      run: cargo build --release --verbose --target ${{ matrix.TARGET }}
