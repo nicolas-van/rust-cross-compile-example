@@ -13,4 +13,4 @@ It compiles a hello world example in RUST using Github Actions to the following 
 
 See the [workflow configuration file](./.github/workflows/rust.yml).
 
-You can also check that the binaries the workflow produces are valid in the [release page](https://github.com/nicolas-van/rust-cross-compile-example/releases).
+You check that the binaries the workflow produces are valid in the [release page](https://github.com/nicolas-van/rust-cross-compile-example/releases) or you can clone this repository. In that case the workflow should run automatically and you will get the same result.
