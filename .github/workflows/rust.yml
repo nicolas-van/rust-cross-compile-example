@@ -38,10 +38,10 @@ jobs:
            OS: ubuntu-latest
          - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1
            OS: ubuntu-latest
-         - TARGET: x86_64-apple-darwin
-           OS: ubuntu-latest
-         - TARGET: x86_64-pc-windows-gnu
-           OS: ubuntu-latest
+#         - TARGET: x86_64-apple-darwin
+#           OS: ubuntu-latest
+#         - TARGET: x86_64-pc-windows-gnu
+#           OS: ubuntu-latest
     runs-on: ${{ matrix.OS }}
     env:
       NAME: rust-cross-compile-example
