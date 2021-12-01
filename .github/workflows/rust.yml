@@ -24,6 +24,8 @@ jobs:
             ~/.cargo/registry
             ./target
           key: test-cargo-registry
+      - name: List
+        run: find ./
       - name: Run tests
         run: cargo test --verbose
 
@@ -68,6 +70,8 @@ jobs:
             ~/.cargo/registry
             ./target
           key: build-cargo-registry-${{matrix.TARGET}}
+      - name: List
+        run: find ./
       - name: Install and configure dependencies
         run: |
           # dependencies are only needed on ubuntu as that's the only place where
@@ -93,10 +97,10 @@ jobs:
           EOF
       - name: Install rust target
         run: rustup target add $TARGET
-      - name: List
-        run: find ./
       - name: Run build
         run: cargo build --release --verbose --target $TARGET
+      - name: List target
+        run: find ./target
       - name: Compress
         run: |
           mkdir -p ./artifacts
