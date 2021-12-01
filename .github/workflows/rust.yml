@@ -56,7 +56,7 @@ jobs:
         linker = "aarch64-linux-gnu-gcc"
         [target.armv7-unknown-linux-gnueabihf]
         linker = "arm-linux-gnueabihf-gcc"
-        [target.armv7-unknown-linux-gnueabihf]
+        [target.armv7-unknown-linux-musleabihf]
         linker = "arm-linux-gnueabihf-gcc"
         [target.arm-unknown-linux-gnueabihf]
         linker = "arm-linux-gnueabihf-gcc"
@@ -67,3 +67,5 @@ jobs:
       run: rustup target add ${{ matrix.TARGET }}
     - name: Run build
       run: cargo build --release --verbose --target ${{ matrix.TARGET }}
+    - name: List
+      run: find ./target
