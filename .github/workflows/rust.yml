@@ -89,7 +89,6 @@ jobs:
               EXEC=$NAME
           fi
           mv ./target/$TARGET/release/$EXEC ./$EXEC
-          ./$EXEC
           tar -czf ./artifacts/$NAME-$TARGET-${{github.ref_name}}.tar.gz $EXEC
       - name: Archive artifact
         uses: actions/upload-artifact@v2
