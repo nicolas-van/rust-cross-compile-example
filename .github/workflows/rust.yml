@@ -18,13 +18,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Cache cargo files
+      - name: Cargo cache
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: ~/.cargo
-          key: test
+          path: ~/.cargo/repository
+          key: test-cargo-repository
       - uses: actions/checkout@v2
       - name: Run tests
         run: cargo test --verbose
@@ -62,13 +60,11 @@ jobs:
       TARGET: ${{ matrix.TARGET }}
       OS: ${{ matrix.OS }}
     steps:
-      - name: Cache cargo files
+      - name: Cargo cache
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: ~/.cargo
-          key: build-${{matrix.TARGET}}
+          path: ~/.cargo/repository
+          key: build-cargo-repository-${{matrix.TARGET}}
       - uses: actions/checkout@v2
       - name: Install and configure dependencies
         run: |
