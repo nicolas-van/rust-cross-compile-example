@@ -43,6 +43,8 @@ jobs:
          - TARGET: x86_64-pc-windows-gnu
            OS: ubuntu-latest
     runs-on: ${{ matrix.OS }}
+    env:
+      NAME: rust-cross-compile-example
     steps:
     - uses: actions/checkout@v2
     - name: Install and configure dependencies
@@ -64,8 +66,18 @@ jobs:
         linker = "arm-linux-gnueabihf-gcc"
         EOF
     - name: Install rust target
-      run: rustup target add ${{ matrix.TARGET }}
+      run: rustup target add $TARGET
     - name: Run build
-      run: cargo build --release --verbose --target ${{ matrix.TARGET }}
+      run: cargo build --release --verbose --target $TARGET
     - name: List
       run: find ./target
+    - name: Compress
+      run: |
+        mkdir -p ./artifacts
+        tar -czf ./artifacts/$NAME-$TARGET.tar.gz ./target/$TARGET/release/$NAME
+    - name: Archive artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: result
+        path: |
+          ./artifacts
