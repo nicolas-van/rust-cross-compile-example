@@ -12,19 +12,18 @@ defaults:
     # necessary for windows
     shell: bash
 
-    
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Cargo cache
         uses: actions/cache@v2
         with:
           path: |
             ~/.cargo/registry
-            target
+            ./target
           key: test-cargo-registry
-      - uses: actions/checkout@v2
       - name: Run tests
         run: cargo test --verbose
 
@@ -61,14 +60,14 @@ jobs:
       TARGET: ${{ matrix.TARGET }}
       OS: ${{ matrix.OS }}
     steps:
+      - uses: actions/checkout@v2
       - name: Cargo cache
         uses: actions/cache@v2
         with:
           path: |
             ~/.cargo/registry
-            target
+            ./target
           key: build-cargo-registry-${{matrix.TARGET}}
-      - uses: actions/checkout@v2
       - name: Install and configure dependencies
         run: |
           # dependencies are only needed on ubuntu as that's the only place where
@@ -98,8 +97,6 @@ jobs:
         run: find ./
       - name: Run build
         run: cargo build --release --verbose --target $TARGET
-      - name: List
-        run: find ./target
       - name: Compress
         run: |
           mkdir -p ./artifacts
