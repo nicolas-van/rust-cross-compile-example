@@ -11,6 +11,7 @@ env:
 
 defaults:
   run:
+    # necessary for windows
     shell: bash
 
 jobs:
@@ -25,6 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # a list of all the targets
         include:
           - TARGET: x86_64-unknown-linux-gnu # tested in a debian container on a mac
             OS: ubuntu-latest
@@ -42,7 +44,7 @@ jobs:
             OS: ubuntu-latest
           - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1, not tested
             OS: ubuntu-latest
-          - TARGET: x86_64-apple-darwin # tested on a mac, is not properly signed so there are warning
+          - TARGET: x86_64-apple-darwin # tested on a mac, is not properly signed so there are security warnings
             OS: macos-latest
           - TARGET: x86_64-pc-windows-gnu # tested on a windows machine
             OS: windows-latest
@@ -56,10 +58,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install and configure dependencies
         run: |
+          # dependencies are only needed on ubuntu as that's the only place where
+          # we make cross-compilation
           if [[ $OS =~ ^ubuntu.*$ ]]; then
             sudo apt-get install -qq gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
           fi
 
+          # some additional configuration for cross-compilation on linux
           cat >>~/.cargo/config <<EOF
           [target.aarch64-unknown-linux-gnu]
           linker = "aarch64-linux-gnu-gcc"
@@ -83,6 +88,7 @@ jobs:
       - name: Compress
         run: |
           mkdir -p ./artifacts
+          # windows is the only OS using a different convention for executable file name
           if [[ $OS =~ ^windows.*$ ]]; then
               EXEC=$NAME.exe
           else
@@ -97,6 +103,7 @@ jobs:
           path: |
             ./artifacts
 
+  # deploys to github releases on tag
   deploy:
     if: startsWith(github.ref, 'refs/tags/')
     needs: build
