@@ -19,7 +19,9 @@ jobs:
       - name: Cargo cache
         uses: actions/cache@v2
         with:
-          path: ~/.cargo/registry
+          path: |
+            ~/.cargo/registry
+            ./target
           key: test-cargo-registry
       - uses: actions/checkout@v2
       - name: Run tests
@@ -61,7 +63,9 @@ jobs:
       - name: Cargo cache
         uses: actions/cache@v2
         with:
-          path: ~/.cargo/registry
+          path: |
+            ~/.cargo/registry
+            ./target
           key: build-cargo-registry-${{matrix.TARGET}}
       - uses: actions/checkout@v2
       - name: Install and configure dependencies
