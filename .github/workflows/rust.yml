@@ -42,7 +42,7 @@ jobs:
             OS: ubuntu-latest
           - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1
             OS: ubuntu-latest
-          - TARGET: x86_64-apple-darwin
+          - TARGET: x86_64-apple-darwin # tested on a mac, is not properly signed so there are warning
             OS: macos-latest
           - TARGET: x86_64-pc-windows-gnu
             OS: windows-latest
@@ -89,6 +89,7 @@ jobs:
               EXEC=$NAME
           fi
           mv ./target/$TARGET/release/$EXEC ./$EXEC
+          ./$EXEC
           tar -czf ./artifacts/$NAME-$TARGET-${{github.ref_name}}.tar.gz $EXEC
       - name: Archive artifact
         uses: actions/upload-artifact@v2
