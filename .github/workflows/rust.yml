@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+  release:
+    types: [created]
 
 env:
   CARGO_TERM_COLOR: always
@@ -13,73 +13,86 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: cargo test --verbose
 
   build:
     strategy:
       fail-fast: false
       matrix:
         include:
-         - TARGET: x86_64-unknown-linux-gnu
-           OS: ubuntu-latest
-         - TARGET: x86_64-unknown-linux-musl
-           OS: ubuntu-latest
-         - TARGET: aarch64-unknown-linux-gnu
-           OS: ubuntu-latest
-         - TARGET: aarch64-unknown-linux-musl
-           OS: ubuntu-latest
-         - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4
-           OS: ubuntu-latest
-         - TARGET: armv7-unknown-linux-musleabihf # raspberry pi 2-3-4
-           OS: ubuntu-latest
-         - TARGET: arm-unknown-linux-gnueabihf # raspberry pi 0-1
-           OS: ubuntu-latest
-         - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1
-           OS: ubuntu-latest
-#         - TARGET: x86_64-apple-darwin
-#           OS: ubuntu-latest
-#         - TARGET: x86_64-pc-windows-gnu
-#           OS: ubuntu-latest
+          - TARGET: x86_64-unknown-linux-gnu
+            OS: ubuntu-latest
+          - TARGET: x86_64-unknown-linux-musl
+            OS: ubuntu-latest
+          - TARGET: aarch64-unknown-linux-gnu
+            OS: ubuntu-latest
+          - TARGET: aarch64-unknown-linux-musl
+            OS: ubuntu-latest
+          - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4
+            OS: ubuntu-latest
+          - TARGET: armv7-unknown-linux-musleabihf # raspberry pi 2-3-4
+            OS: ubuntu-latest
+          - TARGET: arm-unknown-linux-gnueabihf # raspberry pi 0-1
+            OS: ubuntu-latest
+          - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1
+            OS: ubuntu-latest
+#          - TARGET: x86_64-apple-darwin
+#            OS: ubuntu-latest
+#          - TARGET: x86_64-pc-windows-gnu
+#            OS: ubuntu-latest
+    needs: test
     runs-on: ${{ matrix.OS }}
     env:
       NAME: rust-cross-compile-example
       TARGET: ${{ matrix.TARGET }}
       OS: ${{ matrix.OS }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install and configure dependencies
-      run: |
-        sudo apt-get install -qq gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
-        
-        cat >>~/.cargo/config <<EOF
-        [target.aarch64-unknown-linux-gnu]
-        linker = "aarch64-linux-gnu-gcc"
-        [target.aarch64-unknown-linux-musl]
-        linker = "aarch64-linux-gnu-gcc"
-        [target.armv7-unknown-linux-gnueabihf]
-        linker = "arm-linux-gnueabihf-gcc"
-        [target.armv7-unknown-linux-musleabihf]
-        linker = "arm-linux-gnueabihf-gcc"
-        [target.arm-unknown-linux-gnueabihf]
-        linker = "arm-linux-gnueabihf-gcc"
-        [target.arm-unknown-linux-musleabihf]
-        linker = "arm-linux-gnueabihf-gcc"
-        EOF
-    - name: Install rust target
-      run: rustup target add $TARGET
-    - name: Run build
-      run: cargo build --release --verbose --target $TARGET
-    - name: List
-      run: find ./target
-    - name: Compress
-      run: |
-        mkdir -p ./artifacts
-        tar -czf ./artifacts/$NAME-$TARGET.tar.gz ./target/$TARGET/release/$NAME
-    - name: Archive artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: result
-        path: |
-          ./artifacts
+      - uses: actions/checkout@v2
+      - name: Install and configure dependencies
+        run: |
+          sudo apt-get install -qq gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
+          
+          cat >>~/.cargo/config <<EOF
+          [target.aarch64-unknown-linux-gnu]
+          linker = "aarch64-linux-gnu-gcc"
+          [target.aarch64-unknown-linux-musl]
+          linker = "aarch64-linux-gnu-gcc"
+          [target.armv7-unknown-linux-gnueabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          [target.armv7-unknown-linux-musleabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          [target.arm-unknown-linux-gnueabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          [target.arm-unknown-linux-musleabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          EOF
+      - name: Install rust target
+        run: rustup target add $TARGET
+      - name: Run build
+        run: cargo build --release --verbose --target $TARGET
+      - name: List
+        run: find ./target
+      - name: Compress
+        run: |
+          mkdir -p ./artifacts
+          tar -czf ./artifacts/$NAME-$TARGET.tar.gz ./target/$TARGET/release/$NAME
+      - name: Archive artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: result
+          path: |
+            ./artifacts
+
+  deploy:
+#    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: result
+      - name: List
+        run: find ./target
