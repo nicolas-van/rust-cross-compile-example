@@ -2,7 +2,7 @@
 
 A working example of multi targets compilation for Rust using Github Actions.
 
-It compiles a hello world example in RUST using Github Actions to the following architectures:
+It compiles a hello world example in Rust using Github Actions to the following architectures:
 
 * Windows x86_64
 * MacOSX x86_64
