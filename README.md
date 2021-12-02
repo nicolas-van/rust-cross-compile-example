@@ -15,4 +15,4 @@ Windows and MacOSX do not actually use cross-compilation and just launch jobs on
 
 See the [workflow configuration file](./.github/workflows/rust.yml).
 
-You check that the binaries the workflow produces are valid in the [release page](https://github.com/nicolas-van/rust-cross-compile-example/releases) or you can clone this repository. In that case the workflow should run automatically and you will get the same result.
+You check that the binaries the workflow produces are valid in the [release page](https://github.com/nicolas-van/rust-cross-compile-example/releases) or you can fork this repository. In that case the workflow should run automatically and you will get the same result.
