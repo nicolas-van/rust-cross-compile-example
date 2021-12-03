@@ -1,5 +1,7 @@
 # rust-cross-compile-example
 
+[![Rust](https://github.com/nicolas-van/rust-cross-compile-example/actions/workflows/rust.yml/badge.svg)](https://github.com/nicolas-van/rust-cross-compile-example/actions/workflows/rust.yml)
+
 A working example of multi targets compilation for Rust using Github Actions.
 
 It compiles a hello world example in Rust using Github Actions to the following architectures:
