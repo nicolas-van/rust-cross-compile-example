@@ -2,7 +2,6 @@ name: Rust
 
 on:
   push:
-  pull_request:
 
 env:
   CARGO_TERM_COLOR: always
@@ -110,8 +109,13 @@ jobs:
           else
               EXEC=$NAME
           fi
+          if [[ $GITHUB_REF_TYPE =~ ^tag$ ]]; then
+            TAG=$GITHUB_REF_NAME
+          else
+            TAG=$GITHUB_SHA
+          fi
           mv ./target/$TARGET/release/$EXEC ./$EXEC
-          tar -czf ./artifacts/$NAME-$TARGET-${{github.ref_name}}.tar.gz $EXEC
+          tar -czf ./artifacts/$NAME-$TARGET-$TAG.tar.gz $EXEC
       - name: Archive artifact
         uses: actions/upload-artifact@v2
         with:
